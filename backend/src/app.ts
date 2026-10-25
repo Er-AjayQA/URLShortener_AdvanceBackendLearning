@@ -1,0 +1,34 @@
+import dotenv from "dotenv";
+dotenv.config({ path: "./env" });
+import express, { Request, Response } from "express";
+import helmet from "helmet";
+import { requestLogger } from "./middleware/logger.middleware.js";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import { env } from "./config/env.config.js";
+import { globalErrorHandler } from "./middleware/error.middleware.js";
+import { sendResponse } from "./common/helpers/AppResponse.js";
+
+export const app = express();
+
+app.use(helmet());
+app.use(requestLogger);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: env?.FRONTEND_URL,
+    credentials: true,
+  }),
+);
+app.use(cookieParser());
+
+app.get("/health-check", (_req: Request, res: Response) => {
+  sendResponse(res, 200, {
+    success: true,
+    message: "Server is working fine",
+    data: { status: "Healthy" },
+  });
+});
+
+app.use(globalErrorHandler);
