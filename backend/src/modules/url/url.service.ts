@@ -27,6 +27,16 @@ export class UrlService {
       }
     }
 
-    throw new AppError("Short code for this url already exist", 409);
+    throw new AppError("Failed to generate short code", 409);
+  }
+
+  async getOriginalUrlFromShortCode(shortCode: string) {
+    const shortUrl = await this.urlRepo.findShortUrlByShortCode(shortCode);
+
+    if (!shortUrl) {
+      throw new AppError("Original url not found", 404);
+    }
+
+    return shortUrl.originalUrl;
   }
 }

@@ -16,3 +16,12 @@ export const createShortUrlController = CatchAsync(
     });
   },
 );
+
+export const redirectToShortUrlController = CatchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const shortCode = req.params.shortCode as string;
+    const originalUrl = await urlService.getOriginalUrlFromShortCode(shortCode);
+
+    res.redirect(originalUrl);
+  },
+);
