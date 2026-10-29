@@ -1,12 +1,19 @@
 import redis from "../../../lib/redis.js";
 
 export class urlCacheService {
-  private getCacheKey(shortCode: string) {
-    return `short_code:${shortCode}`;
+  getShortCodeCacheKey(shortCode: string) {
+    return `shortCode:${shortCode}`;
   }
-  private setCacheKey(shortCode: string) {}
 
-  public async deleteCacheKey(shortCode: string) {
-    await redis.del(this.getCacheKey(shortCode));
+  async getCache(key: string) {
+    return await redis.get(key);
+  }
+
+  async setCache(key: string, value: string) {
+    await redis.set(key, value, "EX", 300);
+  }
+
+  async deleteCacheKey(key: string) {
+    await redis.del(key);
   }
 }

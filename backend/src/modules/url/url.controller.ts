@@ -25,3 +25,21 @@ export const redirectToShortUrlController = CatchAsync(
     res.redirect(originalUrl);
   },
 );
+
+export const updateShortUrlController = CatchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.user?.userId as string;
+    const shortCode = req.params.shortCode as string;
+    const updatedOriginalUrl = req.body.updatedOriginalUrl as string;
+
+    const result = await urlService.updateShortUrl(userId, shortCode, {
+      updatedOriginalUrl,
+    });
+
+    sendResponse(res, 201, {
+      success: true,
+      message: "Short url updated successfully",
+      data: result,
+    });
+  },
+);

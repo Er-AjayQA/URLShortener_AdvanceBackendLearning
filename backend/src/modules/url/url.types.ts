@@ -3,3 +3,7 @@ export type createShortUrlInputType = {
   originalUrl: string;
   shortCode: string;
 };
+
+export type updateShortUrlInptType = {
+  updatedOriginalUrl: string;
+};
