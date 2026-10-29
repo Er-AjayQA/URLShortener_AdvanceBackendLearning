@@ -38,21 +38,22 @@ export class UrlService {
 
   async getOriginalUrlFromShortCode(shortCode: string) {
     const key = this.cacheService.getShortCodeCacheKey(shortCode);
+    let shortUrl;
 
-    const cachedOriginalUrl = await this.cacheService.getCache(key);
+    shortUrl = await this.cacheService.getCache(key);
 
-    if (cachedOriginalUrl) {
-      return cachedOriginalUrl;
+    if (shortUrl) {
+      return JSON.parse(shortUrl);
     }
 
-    const shortUrl = await this.urlRepo.findShortUrlByShortCode(shortCode);
+    shortUrl = await this.urlRepo.findShortUrlByShortCode(shortCode);
 
     if (!shortUrl) {
       throw new AppError("Original url not found", 404);
     }
 
-    await this.cacheService.setCache(key, shortUrl?.originalUrl);
-    return shortUrl.originalUrl;
+    await this.cacheService.setCache(key, JSON.stringify(shortUrl));
+    return shortUrl;
   }
 
   async updateShortUrl(
@@ -74,7 +75,7 @@ export class UrlService {
 
     const key = this.cacheService.getShortCodeCacheKey(shortCode);
     await this.cacheService.deleteCacheKey(key);
-    await this.cacheService.setCache(key, updatedUrl.originalUrl);
+    await this.cacheService.setCache(key, JSON.stringify(updatedUrl));
     return updatedUrl;
   }
 }

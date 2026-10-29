@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CatchAsync } from "../../common/helpers/CatchAsync.js";
-import authService from "./auth.container.js";
+import { authService } from "./auth.container.js";
 import { sendResponse } from "../../common/helpers/AppResponse.js";
 import { setAuthCookies } from "./auth.helper.js";
 

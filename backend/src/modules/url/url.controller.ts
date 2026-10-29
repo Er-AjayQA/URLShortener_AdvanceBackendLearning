@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { CatchAsync } from "../../common/helpers/CatchAsync.js";
 import { urlService } from "./url.container.js";
 import { sendResponse } from "../../common/helpers/AppResponse.js";
+import { analyticsService } from "../analytics/analytics.container.js";
 
 export const createShortUrlController = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -20,9 +21,20 @@ export const createShortUrlController = CatchAsync(
 export const redirectToShortUrlController = CatchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const shortCode = req.params.shortCode as string;
-    const originalUrl = await urlService.getOriginalUrlFromShortCode(shortCode);
+    const shortUrl = await urlService.getOriginalUrlFromShortCode(shortCode);
 
-    res.redirect(originalUrl);
+    const ipAddress = req.ip;
+    const userAgent = req.headers["user-agent"];
+    const referrer = req.get("Referer");
+
+    await analyticsService.recordClick({
+      shortUrlId: shortUrl.id,
+      ipAddress,
+      userAgent,
+      referrer,
+    });
+
+    res.redirect(shortUrl.originalUrl);
   },
 );
 

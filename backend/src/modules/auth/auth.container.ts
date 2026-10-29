@@ -3,4 +3,4 @@ import { AuthService } from "./auth.service.js";
 
 const authRepository = new AuthRepository();
 const authService = new AuthService(authRepository);
-export default authService;
+export { authService };
