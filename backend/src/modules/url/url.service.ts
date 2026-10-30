@@ -1,5 +1,4 @@
 import { AppError } from "../../common/helpers/AppError.js";
-import { logger } from "../../config/logger.js";
 import { urlCacheService } from "./cache/cache.service.js";
 import { createShortCode } from "./url.helper.js";
 import { IUrlRepository } from "./url.interface.js";
