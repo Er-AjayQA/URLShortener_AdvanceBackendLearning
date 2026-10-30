@@ -23,16 +23,7 @@ export const redirectToShortUrlController = CatchAsync(
     const shortCode = req.params.shortCode as string;
     const shortUrl = await urlService.getOriginalUrlFromShortCode(shortCode);
 
-    const ipAddress = req.ip;
-    const userAgent = req.headers["user-agent"];
-    const referrer = req.get("Referer");
-
-    await analyticsService.recordClick({
-      shortUrlId: shortUrl.id,
-      ipAddress,
-      userAgent,
-      referrer,
-    });
+    await analyticsService.recordClick(shortUrl, req);
 
     res.redirect(shortUrl.originalUrl);
   },

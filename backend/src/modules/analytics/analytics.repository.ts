@@ -4,6 +4,6 @@ import { CreateAnalyticsType } from "./analytics.types.js";
 
 export class AnalyticsRepository implements IAnalyticsRepository {
   async createAnalytics(data: CreateAnalyticsType) {
-    await prisma.clickAnalytics.create({ data });
+    return await prisma.clickAnalytics.create({ data });
   }
 }
